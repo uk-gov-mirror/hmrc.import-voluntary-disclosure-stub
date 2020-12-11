@@ -14,18 +14,26 @@
  * limitations under the License.
  */
 
-package config
+import sbt.Setting
+import scoverage.ScoverageKeys
 
-import play.api.Configuration
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+object CodeCoverageSettings {
 
-import javax.inject.{Inject, Singleton}
+  private val excludedPackages: Seq[String] = Seq(
+    "<empty>",
+    "Reverse.*",
+    "uk.gov.hmrc.BuildInfo",
+    "app.*",
+    "prod.*",
+    ".*Routes.*",
+    "testOnly.*",
+    "testOnlyDoNotUseInAppConf.*"
+  )
 
-@Singleton
-class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig) {
-
-  val authBaseUrl: String = servicesConfig.baseUrl("auth")
-
-  val auditingEnabled: Boolean = config.get[Boolean]("auditing.enabled")
-  val graphiteHost: String     = config.get[String]("microservice.metrics.graphite.host")
+  val settings: Seq[Setting[_]] = Seq(
+    ScoverageKeys.coverageExcludedPackages := excludedPackages.mkString(";"),
+    ScoverageKeys.coverageMinimum := 95,
+    ScoverageKeys.coverageFailOnMinimum := true,
+    ScoverageKeys.coverageHighlighting := true
+  )
 }

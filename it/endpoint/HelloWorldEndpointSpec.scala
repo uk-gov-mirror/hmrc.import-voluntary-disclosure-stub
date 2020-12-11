@@ -14,18 +14,29 @@
  * limitations under the License.
  */
 
-package config
+package endpoint
 
-import play.api.Configuration
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+import play.api.http.Status
+import play.api.libs.ws.{WSRequest, WSResponse}
+import stubs.AuditStub
+import support.IntegrationSpec
 
-import javax.inject.{Inject, Singleton}
+class HelloWorldEndpointSpec extends IntegrationSpec {
 
-@Singleton
-class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig) {
+  "calling the hello-world route" should {
 
-  val authBaseUrl: String = servicesConfig.baseUrl("auth")
+    "return an OK response" in {
 
-  val auditingEnabled: Boolean = config.get[Boolean]("auditing.enabled")
-  val graphiteHost: String     = config.get[String]("microservice.metrics.graphite.host")
+      AuditStub.audit()
+
+      val request: WSRequest = buildRequest("/hello-world")
+
+      val response: WSResponse = await(request.get())
+
+      response.status shouldBe Status.OK
+
+    }
+
+  }
+
 }

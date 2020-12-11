@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-package config
+package stubs
 
-import play.api.Configuration
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+import com.github.tomakehurst.wiremock.stubbing.StubMapping
+import play.api.http.Status._
+import support.WireMockMethods
 
-import javax.inject.{Inject, Singleton}
+object AuditStub extends WireMockMethods {
 
-@Singleton
-class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig) {
+  private val auditUri: String = s"/write/audit.*"
 
-  val authBaseUrl: String = servicesConfig.baseUrl("auth")
+  def audit(): StubMapping = {
+    when(method = POST, uri = auditUri)
+      .thenReturn(status = NO_CONTENT)
+  }
 
-  val auditingEnabled: Boolean = config.get[Boolean]("auditing.enabled")
-  val graphiteHost: String     = config.get[String]("microservice.metrics.graphite.host")
 }
