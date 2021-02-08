@@ -24,8 +24,8 @@ import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
-import java.time.{LocalDateTime, ZoneId}
 import java.time.format.DateTimeFormatter
+import java.time.{LocalDateTime, ZoneId}
 import java.util.{Locale, UUID}
 
 class CreateCaseControllerSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSuite {
@@ -33,22 +33,41 @@ class CreateCaseControllerSpec extends AnyWordSpec with Matchers with GuiceOneAp
   private val httpDateFormatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH).withZone(ZoneId.of("GMT"))
 
   private val request = FakeRequest(controllers.routes.CreateCaseController.createCase())
-    .withHeaders(
+
+  private val controller = new CreateCaseController(stubControllerComponents())
+
+  "Calling createCase with a valid request" should {
+
+    val validRequest = request.withHeaders(
       "customprocesseshost" -> "Digital",
       "x-correlation-id" -> UUID.randomUUID().toString,
-      "date" -> LocalDateTime.now().format(httpDateFormatter) ,
+      "date" -> LocalDateTime.now().format(httpDateFormatter),
       "content-type" -> ContentTypes.JSON,
       "accept" -> ContentTypes.JSON,
       "authorization" -> s"Bearer some-really-long-token"
     )
 
-  private val controller = new CreateCaseController(stubControllerComponents())
-
-  "Calling createCase" should {
-
     "return 200" in {
-      val result = controller.createCase()(request)
+      val result = controller.createCase()(validRequest)
       status(result) shouldBe Status.OK
+    }
+
+    "return a JSON payload" in {
+      val result = controller.createCase()(validRequest)
+      contentType(result) shouldBe Some(ContentTypes.JSON)
+    }
+
+    "return a correlation ID in the headers" in {
+      val result: Result = await(controller.createCase()(validRequest))
+      result.header.headers.keys should contain("x-correlation-id")
+    }
+  }
+
+  "Calling createCase with an invalid request" should {
+
+    "return 400" in {
+      val result = controller.createCase()(request)
+      status(result) shouldBe Status.BAD_REQUEST
     }
 
     "return a JSON payload" in {
