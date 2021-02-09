@@ -1,1 +1,2 @@
-GET        /address/:id        controllers.ImporterAddressController.onLoad(id: String)
+GET         /api/address/:id                      controllers.ImporterAddressController.onLoad(id: String)
+POST        /cpr/caserequest/c18/create/v1        controllers.CreateCaseController.createCase()
