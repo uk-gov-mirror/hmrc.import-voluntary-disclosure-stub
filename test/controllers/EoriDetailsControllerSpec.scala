@@ -23,11 +23,11 @@ import play.api.http.Status
 import play.api.test.{FakeRequest, Helpers}
 import play.api.test.Helpers.{defaultAwaitTimeout, status}
 
-class ImporterAddressControllerSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSuite {
+class EoriDetailsControllerSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSuite {
 
   private val fakeRequest = FakeRequest("GET", "/")
 
-  private val controller = new ImporterAddressController(Helpers.stubControllerComponents())
+  private val controller = new EoriDetailsController(Helpers.stubControllerComponents())
 
   "GET /" should {
     "return 200" in {

@@ -24,7 +24,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.Future
 
 @Singleton()
-class ImporterAddressController @Inject()(cc: ControllerComponents)
+class EoriDetailsController @Inject()(cc: ControllerComponents)
   extends BackendController(cc) {
 
   def onLoad(id: String): Action[AnyContent] = Action.async { implicit request =>
