@@ -27,10 +27,6 @@ import scala.concurrent.Future
 class ImporterAddressController @Inject()(cc: ControllerComponents)
   extends BackendController(cc) {
 
-
-  // TODO - atm the id being passed from front end is hard coded to one, story gives a specific one to send
-  // TODO - do we hard code it to that, or try different approach since we have a story to extract it in 350 story
-
   def onLoad(id: String): Action[AnyContent] = Action.async { implicit request =>
     Future.successful(
       Ok(
