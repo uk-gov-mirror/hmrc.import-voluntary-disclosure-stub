@@ -16,25 +16,50 @@
 
 package controllers
 
-import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.Future
 
 @Singleton()
 class ImporterAddressController @Inject()(cc: ControllerComponents)
   extends BackendController(cc) {
 
+
+  // TODO - atm the id being passed from front end is hard coded to one, story gives a specific one to send
+  // TODO - do we hard code it to that, or try different approach since we have a story to extract it in 350 story
+
   def onLoad(id: String): Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok(Json.obj(
+    Future.successful(
+      Ok(
+        Json.obj(
+          fields = "responseCommon" -> responseCommon,
+          "responseDetail" -> responseDetail
+        )
+      )
+    )
+  }
+
+  private final val responseCommon = Json.obj(
+    fields = "status" -> "OK",
+    "statusText" -> "Optional status text from ETMP",
+    "processingDate" -> "2021-03-1T19:33:47Z",
+    "returnParameters" -> Json.arr(
+      Json.obj("paramName" -> "POSITION", "paramValue" -> "LINK")
+    )
+  )
+
+  private final val responseDetail = Json.obj(
+    fields = "EORINo" -> "GB987654321000",
+    "CDSFullName" -> "Fast Food ltd",
+    "CDSEstablishmentAddress" -> Json.obj(
       "streetAndNumber" -> "99 Avenue Road",
       "city" -> "Anyold Town",
       "postalCode" -> "99JZ 1AA",
-      "countryCode" -> "United Kingdom"
-    )))
-
-  }
+      "countryCode" -> "GB"
+    )
+  )
 
 }
