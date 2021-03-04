@@ -27,7 +27,7 @@ import scala.concurrent.Future
 class EoriDetailsController @Inject()(cc: ControllerComponents)
   extends BackendController(cc) {
 
-  def onLoad(id: String): Action[AnyContent] = Action.async { implicit request =>
+  def onLoad(regime: String, acknowledgementReference: String, EORI: String): Action[AnyContent] = Action.async { implicit request =>
     Future.successful(
       Ok(
         Json.obj(
