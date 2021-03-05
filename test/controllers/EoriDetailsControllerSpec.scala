@@ -23,15 +23,18 @@ import play.api.http.Status
 import play.api.test.{FakeRequest, Helpers}
 import play.api.test.Helpers.{defaultAwaitTimeout, status}
 
-class ImporterAddressControllerSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSuite {
+class EoriDetailsControllerSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSuite {
 
   private val fakeRequest = FakeRequest("GET", "/")
 
-  private val controller = new ImporterAddressController(Helpers.stubControllerComponents())
+  private val controller = new EoriDetailsController(Helpers.stubControllerComponents())
 
   "GET /" should {
     "return 200" in {
-      val result = controller.onLoad("1")(fakeRequest)
+      val result = controller.onLoad(
+        regime = "CDS",
+        acknowledgementReference = "11a2b17559e64b14be257a112a7d9e8e",
+        EORI = "GB123456789")(fakeRequest)
       status(result) shouldBe Status.OK
     }
   }

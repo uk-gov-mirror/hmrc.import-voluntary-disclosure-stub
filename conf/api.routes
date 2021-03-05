@@ -1,2 +1,2 @@
-GET         /api/address/:id                      controllers.ImporterAddressController.onLoad(id: String)
-POST        /cpr/caserequest/c18/create/v1        controllers.CreateCaseController.createCase()
+GET         /subscriptions/subscriptiondisplay/v1        controllers.EoriDetailsController.onLoad(regime: String, acknowledgementReference: String, EORI: String)
+POST        /cpr/caserequest/c18/create/v1               controllers.CreateCaseController.createCase()
